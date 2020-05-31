@@ -5,7 +5,9 @@ struct test{
 int main(){
     //this is a test
     float tes = tt[1][2].c[1][2];
+    int a;
     tt[1][2].c[1][2]='a';
+    a.b=1;
     return d;       //错误类型8，返回值类型不匹配
 }
 

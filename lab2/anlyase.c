@@ -786,6 +786,10 @@ void Exp(struct ASTNode *T)
                     semantic_error(T->pos,T0->type_id,"变量不存在");
                     break;
                 }
+                else if(symbolTable.symbols[rtn].type!=STRUCT){
+                    semantic_error(T->pos,T0->type_id,"对非结构体使用.运算");
+                    break;
+                }
                 T0 = T->ptr[1];
                 while(T0->kind != ID)
                     T0 = T0->ptr[0];

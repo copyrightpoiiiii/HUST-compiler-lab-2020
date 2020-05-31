@@ -2,7 +2,7 @@ compiler:
 	flex scanner.l
 	bison -d parser.y
 	gcc -o parser lex.yy.c parser.tab.c ast.c anlyase.c
-	./parser test1.c > out.txt
+	./parser test.c > out.txt
 
 clean :
 	rm -f lex.yy.c
