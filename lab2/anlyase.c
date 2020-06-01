@@ -624,7 +624,8 @@ void Exp(struct ASTNode *T)
 	case PLUS:
 	case MINUS:
 	case STAR:
-	case DIV:   T->ptr[0]->offset=T->offset;
+	case DIV:   
+                T->ptr[0]->offset=T->offset;
                 Exp(T->ptr[0]);
                 T->ptr[1]->offset=T->offset+T->ptr[0]->width;
                 Exp(T->ptr[1]);
@@ -641,7 +642,7 @@ void Exp(struct ASTNode *T)
                     break;
                 }
                 T->place=fill_Temp(newTemp(),LEV,T->type,'T',T->offset+T->ptr[0]->width+T->ptr[1]->width);
-                opn1.kind=ID; strcpy(opn1.id,symbolTable.symbols[T->ptr[0]->place].alias);
+                /*opn1.kind=ID; strcpy(opn1.id,symbolTable.symbols[T->ptr[0]->place].alias);
                 opn1.type=T->ptr[0]->type;
                 opn1.offset=symbolTable.symbols[T->ptr[0]->place].offset;
                 opn2.kind=ID; strcpy(opn2.id,symbolTable.symbols[T->ptr[1]->place].alias);
@@ -649,7 +650,7 @@ void Exp(struct ASTNode *T)
                 opn2.offset=symbolTable.symbols[T->ptr[1]->place].offset;
                 result.kind=ID; strcpy(result.id,symbolTable.symbols[T->place].alias);
                 result.type=T->type;
-                result.offset=symbolTable.symbols[T->place].offset;
+                result.offset=symbolTable.symbols[T->place].offset;*/
                 //T->code=merge(3,T->ptr[0]->code,T->ptr[1]->code,genIR(T->kind,opn1,opn2,result));
                 break;
 	case NOT:   //未写完整
@@ -681,7 +682,7 @@ void Exp(struct ASTNode *T)
                     T->type = T->ptr[1]->type;
                     T0 = T->ptr[1];
                 }
-                if ((T0->place >= 0 && (symbolTable.symbols[T0->place].flag == 'V' || symbolTable.symbols[T0->place].flag == 'P'))||T0->kind == STRUCT_CALL )
+                if ((T0->place >= 0 && (symbolTable.symbols[T0->place].flag == 'V' || symbolTable.symbols[T0->place].flag == 'P') && (symbolTable.symbols[T0->place].type != STRUCT))||T0->kind == STRUCT_CALL ||T0->kind ==ARRAY_CALL)
                     T->type = T0->type;
                 else    semantic_error(T->pos, "", "非左值不可进行自增自减运算");
                 break;
@@ -707,7 +708,8 @@ void Exp(struct ASTNode *T)
                     //T->code=T->ptr[0]->code;
                 }
                 else {
-                    semantic_error(T->pos, T->type_id, "参数错误！");
+                    if(symbolTable.symbols[rtn].paramnum!=0)
+                        semantic_error(T->pos, T->type_id, "参数错误！");
                     break;
                 }
                     //处理参数列表的中间代码
@@ -741,6 +743,10 @@ void Exp(struct ASTNode *T)
                     break;
                 }
                 else if (symbolTable.symbols[rtn].flag == 'V'){
+                    semantic_error(T->pos, T->type_id, "不是数组变量名，不匹配");
+                    break;
+                }
+                else if (symbolTable.symbols[rtn].flag == 'P'){
                     semantic_error(T->pos, T->type_id, "不是数组变量名，不匹配");
                     break;
                 }
