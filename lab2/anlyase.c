@@ -1,5 +1,5 @@
 #include "def.h"
-#define DEBUG 1
+#define DEBUG 0
 
 void itoa(int x,char * s,int base){
     sprintf(s, "%d", x);
@@ -673,16 +673,17 @@ void Exp(struct ASTNode *T)
                     T->ptr[0]->offset = T->offset;
                     Exp(T->ptr[0]);
                     T->type = T->ptr[0]->type;
-                    tmp = T->ptr[0]->place;
+                    T0 = T->ptr[0];
                 }
                 else if (T->ptr[1]){
                     T->ptr[1]->offset = T->offset;
                     Exp(T->ptr[1]);
                     T->type = T->ptr[1]->type;
-                    tmp = T->ptr[1]->place;
+                    T0 = T->ptr[1];
                 }
-                if (!(tmp >= 0 && (symbolTable.symbols[tmp].flag == 'V' || symbolTable.symbols[tmp].flag == 'P')))
-                    semantic_error(T->pos, "", "非左值不可进行自增自减运算");
+                if ((T0->place >= 0 && (symbolTable.symbols[T0->place].flag == 'V' || symbolTable.symbols[T0->place].flag == 'P'))||T0->kind == STRUCT_CALL )
+                    T->type = T0->type;
+                else    semantic_error(T->pos, "", "非左值不可进行自增自减运算");
                 break;
     case FUNC_CALL: //根据T->type_id查出函数的定义，如果语言中增加了实验教材的read，write需要单独处理一下
                 rtn=searchSymbolTable(T->type_id);
@@ -790,6 +791,7 @@ void Exp(struct ASTNode *T)
                     semantic_error(T->pos,T0->type_id,"对非结构体使用.运算");
                     break;
                 }
+                T->place = rtn;
                 T0 = T->ptr[1];
                 while(T0->kind != ID)
                     T0 = T0->ptr[0];
@@ -1236,6 +1238,8 @@ void semantic_Analysis(struct ASTNode *T)
 	case RELOP:
 	case PLUS:
 	case MINUS:
+    case DMINUS:
+    case DPLUS:
 	case STAR:
 	case DIV:
 	case NOT:
