@@ -1,0 +1,117 @@
+ 外部变量定义：(1)
+   类型： int
+   变量名：
+      ID： a
+      ID： b
+      ID： c
+ 外部变量定义：(2)
+   类型： float
+   变量名：
+      ID： m
+      ID： n
+ 函数定义：(6)
+   类型： int
+   函数名：fibo
+   函数形参：
+      类型：int, 参数名：a
+   复合语句：(6)
+      复合语句的变量定义部分：
+      复合语句的语句部分：
+         条件语句(IF_THEN)：(5)
+            条件：
+               OR
+                  ==
+                     调用变量：a
+                     INT：1
+                  ==
+                     调用变量：a
+                     INT：2
+            IF子句：(5)
+               返回语句：(4)
+                  INT：1
+         返回语句：(5)
+            PLUS
+               函数调用：(5)
+                  函数名：fibo
+                  第1个实际参数表达式：
+                     MINUS
+                        调用变量：a
+                        INT：1
+
+               函数调用：(5)
+                  函数名：fibo
+                  第1个实际参数表达式：
+                     MINUS
+                        调用变量：a
+                        INT：2
+
+ 函数定义：(21)
+   类型： int
+   函数名：main
+      无参函数
+   复合语句：(21)
+      复合语句的变量定义部分：
+         局部变量定义：(8)
+            类型： int
+            变量名：
+                   m
+                   n
+                   i
+         局部变量定义：(9)
+            类型： int
+            变量名：
+                  数组名为:z
+                  数组维数大小为: 100 10 
+      复合语句的语句部分：
+         表达式语句：(10)
+            ASSIGNOP
+               数组：
+                  数组：
+                     调用变量：z
+                  数组下标：
+                     调用变量：m
+               数组下标：
+                  INT：2
+               INT：1
+         表达式语句：(11)
+            ASSIGNOP
+               调用变量：m
+               函数调用：(11)
+                  函数名：read
+         返回语句：(20)
+            INT：1
+
+FUNCTION fibo :
+  PARAM v7
+  temp1 := #1
+  IF v7 == temp1 GOTO label3
+  GOTO label4
+LABEL label4 :
+  temp2 := #2
+  IF v7 == temp2 GOTO label3
+  GOTO label2
+LABEL label3 :
+  temp3 := #1
+  RETURN temp3
+LABEL label2 :
+  temp4 := #1
+  temp5 := v7 - temp4
+  ARG temp5
+  temp6 := CALL fibo
+  temp7 := #2
+  temp8 := v7 - temp7
+  ARG temp8
+  temp9 := CALL fibo
+  temp10 := temp6 + temp9
+  RETURN temp10
+LABEL label1 :
+
+FUNCTION main :
+  temp12 := #1
+  v12[2][m]:= temp12
+  RETURN v12
+  temp13 := CALL read
+  v9 := temp13
+  temp14 := #1
+  RETURN temp14
+LABEL label5 :
